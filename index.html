@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAK Company AI Agent - Test Interface</title>
+    <title>JAK Company n8n Workflow Test</title>
     <style>
         * {
             margin: 0;
@@ -26,7 +26,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             height: 90vh;
             display: flex;
             flex-direction: column;
@@ -130,15 +130,77 @@
             background: white;
             border-top: 1px solid #e0e0e0;
             display: flex;
-            gap: 10px;
-            align-items: flex-end;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .input-group {
-            flex: 1;
+        .webhook-config {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #2196f3;
+        }
+
+        .webhook-config h3 {
+            margin-bottom: 10px;
+            color: #1976d2;
+            font-size: 1em;
+        }
+
+        .webhook-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .webhook-input:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+
+        .webhook-help {
+            font-size: 0.8em;
+            color: #666;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 8px;
+        }
+
+        .controls {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: white;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        .control-btn.clear {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .control-btn.clear:hover {
+            background: #c82333;
         }
 
         .input-wrapper {
@@ -189,35 +251,26 @@
             cursor: not-allowed;
         }
 
-        .controls {
+        .quick-tests {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 10px;
         }
 
-        .control-btn {
+        .quick-test {
             padding: 6px 12px;
-            border: 1px solid #ddd;
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
             border-radius: 15px;
-            background: white;
             font-size: 0.8em;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .control-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .control-btn.clear {
-            background: #dc3545;
+        .quick-test:hover {
+            background: #4caf50;
             color: white;
-            border-color: #dc3545;
-        }
-
-        .control-btn.clear:hover {
-            background: #c82333;
         }
 
         .loading {
@@ -248,42 +301,27 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .quick-tests {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-
-        .quick-test {
-            padding: 4px 8px;
-            background: #e3f2fd;
-            border: 1px solid #2196f3;
+        .workflow-info {
+            background: #f0f8ff;
+            border: 2px solid #007bff;
             border-radius: 10px;
-            font-size: 0.75em;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 12px;
+            margin-bottom: 15px;
         }
 
-        .quick-test:hover {
-            background: #2196f3;
-            color: white;
+        .workflow-info h4 {
+            color: #007bff;
+            margin-bottom: 8px;
         }
 
-        .api-config {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+        .workflow-path {
             font-size: 0.8em;
-        }
-
-        .api-config input {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #ddd;
+            color: #666;
+            background: #f9f9f9;
+            padding: 8px;
             border-radius: 5px;
-            margin-top: 5px;
+            margin-top: 8px;
+            font-family: monospace;
         }
 
         @media (max-width: 768px) {
@@ -305,58 +343,74 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🤖 JAK Company AI Agent</h1>
-            <p>Interface de test pour l'agent WhatsApp</p>
+            <h1>🚀 Test Workflow n8n JAK Company</h1>
+            <p>Interface de test pour le workflow n8n complet</p>
             <div class="status" id="status">Déconnecté</div>
         </div>
         
         <div class="chat-container">
             <div class="messages" id="messages">
                 <div class="message system">
-                    Interface de test chargée. Configurez l'URL de l'API et commencez à tester ! 🚀
+                    🎯 Interface de test pour workflow n8n chargée !<br>
+                    Configure ton webhook n8n et teste l'IA complète 🚀
                 </div>
             </div>
             
             <div class="input-container">
-                <div class="input-group">
-                    <div class="api-config">
-                        <label>URL de l'API :</label>
-                        <input type="text" id="apiUrl" value="https://langchain-api-kh6o.onrender.com" placeholder="https://votre-api.com">
+                <div class="webhook-config">
+                    <h3>🔗 Configuration Webhook n8n</h3>
+                    <input type="text" 
+                           id="webhookUrl" 
+                           class="webhook-input"
+                           placeholder="https://ton-instance-n8n.com/webhook/jak-company-webhook"
+                           value="">
+                    <div class="webhook-help">
+                        💡 <strong>Comment obtenir l'URL :</strong><br>
+                        1. Dans n8n, clique sur le nœud "WhatsApp Trigger"<br>
+                        2. Copie l'URL du webhook affiché<br>
+                        3. Colle-la ici pour tester ton workflow complet
                     </div>
-                    
-                    <div class="controls">
-                        <button class="control-btn" onclick="testConnection()">🔌 Test connexion</button>
-                        <button class="control-btn" onclick="clearMemory()">🧠 Clear mémoire</button>
-                        <button class="control-btn clear" onclick="clearChat()">🗑️ Clear chat</button>
-                        <button class="control-btn" onclick="getStatus()">📊 Statut</button>
+                </div>
+
+                <div class="workflow-info">
+                    <h4>🔄 Flux de test actuel :</h4>
+                    <div id="currentFlow">App Test → Webhook n8n → Workflow Complet → Réponse</div>
+                    <div class="workflow-path" id="workflowPath">
+                        En attente de configuration webhook...
                     </div>
-                    
-                    <div class="quick-tests">
-                        <div class="quick-test" onclick="sendQuickTest('je veux être payé')">💰 Paiement</div>
-                        <div class="quick-test" onclick="sendQuickTest('comment devenir ambassadeur ?')">🎯 Ambassadeur</div>
-                        <div class="quick-test" onclick="sendQuickTest('je veux parler à un humain')">👤 Humain</div>
-                        <div class="quick-test" onclick="sendQuickTest('vous êtes nuls !')">😡 Agressif</div>
-                        <div class="quick-test" onclick="sendQuickTest('formation CPF disponible ?')">🎓 CPF</div>
-                    </div>
-                    
-                    <div class="input-wrapper">
-                        <textarea 
-                            id="messageInput" 
-                            placeholder="Tapez votre message ici..."
-                            rows="1"
-                            onkeydown="handleKeyPress(event)"
-                        ></textarea>
-                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                            ▶️
-                        </button>
-                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="control-btn" onclick="testWebhook()">🔌 Test webhook</button>
+                    <button class="control-btn" onclick="clearChat()">🗑️ Clear chat</button>
+                    <button class="control-btn" onclick="showWorkflowInfo()">📊 Info workflow</button>
+                </div>
+                
+                <div class="quick-tests">
+                    <div class="quick-test" onclick="sendQuickTest('je veux être payé pour ma formation')">💰 Paiement (Bloc direct)</div>
+                    <div class="quick-test" onclick="sendQuickTest('comment devenir ambassadeur ?')">🎯 Ambassadeur (Bloc direct)</div>
+                    <div class="quick-test" onclick="sendQuickTest('j\\'ai une question sur mon entreprise')">🤖 Question IA</div>
+                    <div class="quick-test" onclick="sendQuickTest('vous êtes vraiment nuls !')">😡 Agressivité</div>
+                    <div class="quick-test" onclick="sendQuickTest('quand serai-je rémunéré ?')">🔄 API Python</div>
+                </div>
+                
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Tape ton message ici pour tester le workflow n8n..."
+                        rows="1"
+                        onkeydown="handleKeyPress(event)"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        ▶️
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let conversationId = 'test_' + Date.now();
+        let conversationId = 'n8n_test_' + Date.now();
         let isConnected = false;
 
         // Auto-resize textarea
@@ -365,16 +419,15 @@
             this.style.height = Math.min(this.scrollHeight, 100) + 'px';
         });
 
-        // Test connection on load
-        window.onload = function() {
-            testConnection();
-        };
-
-        function updateStatus(connected) {
+        function updateStatus(connected, message = '') {
             const status = document.getElementById('status');
             isConnected = connected;
             status.textContent = connected ? 'Connecté' : 'Déconnecté';
             status.className = 'status ' + (connected ? 'connected' : 'disconnected');
+            
+            if (message) {
+                addMessage(`🔌 ${message}`, 'system');
+            }
         }
 
         function addMessage(content, type, extra = {}) {
@@ -384,10 +437,13 @@
             
             let messageContent = content;
             if (extra.timestamp) {
-                messageContent += `<div class="message-info">${extra.timestamp}</div>`;
+                messageContent += `<div class="message-info">⏰ ${extra.timestamp}</div>`;
             }
             if (extra.metadata) {
-                messageContent += `<div class="message-info">${extra.metadata}</div>`;
+                messageContent += `<div class="message-info">📊 ${extra.metadata}</div>`;
+            }
+            if (extra.workflow) {
+                messageContent += `<div class="message-info">🔄 ${extra.workflow}</div>`;
             }
             
             messageDiv.innerHTML = messageContent;
@@ -416,41 +472,54 @@
             }
         }
 
-        async function testConnection() {
-            const apiUrl = document.getElementById('apiUrl').value;
-            if (!apiUrl) {
-                addMessage('❌ Veuillez saisir une URL d\'API', 'system');
+        async function testWebhook() {
+            const webhookUrl = document.getElementById('webhookUrl').value.trim();
+            if (!webhookUrl) {
+                addMessage('❌ Veuillez saisir l\'URL du webhook n8n', 'system');
                 return;
             }
 
             try {
-                const response = await fetch(`${apiUrl}/health`, {
-                    method: 'GET',
+                // Test avec un message simple
+                const testPayload = {
+                    body: {
+                        text: "test connexion",
+                        from: "test_user_webhook"
+                    }
+                };
+
+                addMessage('🔍 Test de connexion webhook...', 'system');
+                
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                    }
+                    },
+                    body: JSON.stringify(testPayload)
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    updateStatus(true);
-                    addMessage(`✅ Connexion réussie ! Version: ${data.version}, Sessions actives: ${data.active_sessions}`, 'system');
+                    updateStatus(true, 'Webhook n8n connecté avec succès !');
+                    document.getElementById('workflowPath').textContent = 
+                        'Webhook configuré → Workflow n8n actif → Prêt pour les tests';
                 } else {
-                    throw new Error(`HTTP ${response.status}`);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
             } catch (error) {
-                updateStatus(false);
-                addMessage(`❌ Erreur de connexion: ${error.message}`, 'system');
+                updateStatus(false, `Erreur webhook: ${error.message}`);
+                document.getElementById('workflowPath').textContent = 
+                    'Erreur de connexion - Vérifiez l\'URL du webhook';
             }
         }
 
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
+            const webhookUrl = document.getElementById('webhookUrl').value.trim();
             
             if (!message) return;
-            if (!isConnected) {
-                addMessage('❌ Pas de connexion à l\'API. Testez la connexion d\'abord.', 'system');
+            if (!webhookUrl) {
+                addMessage('❌ Configure d\'abord l\'URL du webhook n8n', 'system');
                 return;
             }
 
@@ -469,39 +538,61 @@
             showLoading();
 
             try {
-                const apiUrl = document.getElementById('apiUrl').value;
-                const response = await fetch(apiUrl, {
+                // Payload au format WhatsApp pour n8n
+                const payload = {
+                    body: {
+                        text: message,
+                        from: conversationId,
+                        timestamp: Date.now()
+                    }
+                };
+
+                const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        message_original: message,
-                        matched_bloc_response: "",
-                        wa_id: conversationId
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 hideLoading();
 
                 if (response.ok) {
-                    const data = await response.json();
+                    // n8n peut retourner différents formats
+                    let data;
+                    const contentType = response.headers.get('content-type');
                     
-                    // Afficher la réponse de l'agent
-                    const metadata = `Status: ${data.status} | Priorité: ${data.priority_detected} | Escalade: ${data.escalade_required ? 'Oui' : 'Non'}`;
+                    if (contentType && contentType.includes('application/json')) {
+                        data = await response.json();
+                    } else {
+                        // Si n8n retourne du texte brut
+                        const textResponse = await response.text();
+                        data = { response: textResponse || 'Réponse reçue du workflow n8n' };
+                    }
                     
-                    addMessage(data.matched_bloc_response || 'Réponse vide', 'bot', {
+                    // Afficher la réponse
+                    const responseText = data.response || data.message || data.output || 'Workflow exécuté avec succès';
+                    
+                    // Metadata du workflow
+                    let metadata = 'Traité par workflow n8n';
+                    if (data.analytics) {
+                        const proc = data.analytics.processing;
+                        metadata = `Type: ${proc.response_type} | Confiance: ${proc.confidence} | Chaîne: ${proc.processing_chain}`;
+                    }
+                    
+                    addMessage(responseText, 'bot', {
                         timestamp: new Date().toLocaleTimeString(),
-                        metadata: metadata
+                        metadata: metadata,
+                        workflow: data.analytics ? `Bloc: ${data.analytics.processing.bloc_matched || 'Aucun'}` : ''
                     });
 
-                    // Afficher info d'escalade si nécessaire
-                    if (data.escalade_required) {
-                        addMessage(`🔔 Escalade requise (${data.escalade_type})`, 'system');
+                    // Info escalade
+                    if (data.escalade_info && data.escalade_info.required) {
+                        addMessage(`🔔 Escalade requise: ${data.escalade_info.type}`, 'system');
                     }
                 } else {
-                    const errorData = await response.json().catch(() => ({ detail: 'Erreur inconnue' }));
-                    addMessage(`❌ Erreur API: ${errorData.detail || response.statusText}`, 'system');
+                    const errorText = await response.text();
+                    addMessage(`❌ Erreur workflow n8n (${response.status}): ${errorText}`, 'system');
                 }
             } catch (error) {
                 hideLoading();
@@ -513,54 +604,24 @@
             }
         }
 
-        async function clearMemory() {
-            if (!isConnected) {
-                addMessage('❌ Pas de connexion à l\'API', 'system');
-                return;
-            }
-
-            try {
-                const apiUrl = document.getElementById('apiUrl').value;
-                const response = await fetch(`${apiUrl}/clear_memory/${conversationId}`, {
-                    method: 'POST'
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    addMessage(`🧠 ${data.message}`, 'system');
-                } else {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-            } catch (error) {
-                addMessage(`❌ Erreur lors de l'effacement: ${error.message}`, 'system');
-            }
-        }
-
-        async function getStatus() {
-            if (!isConnected) {
-                addMessage('❌ Pas de connexion à l\'API', 'system');
-                return;
-            }
-
-            try {
-                const apiUrl = document.getElementById('apiUrl').value;
-                const response = await fetch(`${apiUrl}/memory_status`);
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const statusMsg = `📊 Sessions actives: ${data.active_sessions} | Taille mémoire totale: ${data.total_memory_size} chars`;
-                    addMessage(statusMsg, 'system');
-                } else {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-            } catch (error) {
-                addMessage(`❌ Erreur statut: ${error.message}`, 'system');
-            }
-        }
-
         function clearChat() {
             const messages = document.getElementById('messages');
-            messages.innerHTML = '<div class="message system">Chat effacé. Prêt pour une nouvelle conversation ! 🚀</div>';
+            messages.innerHTML = '<div class="message system">🧹 Chat effacé. Prêt pour de nouveaux tests ! 🚀</div>';
+        }
+
+        function showWorkflowInfo() {
+            const info = `
+🔄 <strong>Flux de traitement n8n :</strong><br><br>
+1️⃣ <strong>WhatsApp Trigger</strong> - Reçoit le message<br>
+2️⃣ <strong>Input Validation</strong> - Nettoie et valide<br>
+3️⃣ <strong>Enhanced Fuzzy Matcher</strong> - Trouve les correspondances<br>
+4️⃣ <strong>Décision IA</strong> - Choix entre bloc/IA/API<br>
+5️⃣ <strong>OpenAI Agent</strong> - Génère réponse intelligente (si nécessaire)<br>
+6️⃣ <strong>Response Router</strong> - Combine les sources<br>
+7️⃣ <strong>Analytics</strong> - Log les métriques<br>
+8️⃣ <strong>Retour à l'app</strong> - Affichage final
+            `;
+            addMessage(info, 'system');
         }
 
         function sendQuickTest(message) {
@@ -575,53 +636,20 @@
             }
         }
 
-        // Simulation de tests automatiques
-        function runAutoTests() {
-            const tests = [
-                'Salut, comment ça va ?',
-                'je veux être payé pour ma formation',
-                'ça fait 3 mois que j\'attends mon virement',
-                'comment devenir ambassadeur ?',
-                'vous êtes vraiment nuls !',
-                'je veux parler à un humain'
-            ];
-
-            let index = 0;
-            const interval = setInterval(() => {
-                if (index >= tests.length) {
-                    clearInterval(interval);
-                    addMessage('🤖 Tests automatiques terminés !', 'system');
-                    return;
-                }
-
-                document.getElementById('messageInput').value = tests[index];
-                sendMessage();
-                index++;
-            }, 3000);
-        }
-
-        // Raccourcis clavier
-        document.addEventListener('keydown', function(event) {
-            // Ctrl/Cmd + Entrée pour envoyer
-            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-                sendMessage();
-            }
-            
-            // Ctrl/Cmd + L pour clear
-            if ((event.ctrlKey || event.metaKey) && event.key === 'l') {
-                event.preventDefault();
-                clearChat();
-            }
-            
-            // Ctrl/Cmd + T pour test connexion
-            if ((event.ctrlKey || event.metaKey) && event.key === 't') {
-                event.preventDefault();
-                testConnection();
-            }
-        });
-
         // Focus automatique sur l'input
         document.getElementById('messageInput').focus();
+
+        // Message d'aide au démarrage
+        setTimeout(() => {
+            addMessage(`
+                📋 <strong>Guide de configuration :</strong><br><br>
+                1️⃣ Dans n8n, va sur le nœud "WhatsApp Trigger"<br>
+                2️⃣ Copie l'URL du webhook<br>
+                3️⃣ Colle-la dans le champ ci-dessus<br>
+                4️⃣ Clique "Test webhook"<br>
+                5️⃣ Lance tes tests ! 🚀
+            `, 'system');
+        }, 1000);
     </script>
 </body>
 </html>
