@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAK Company n8n Workflow Test</title>
+    <title>JAK Company n8n Workflow Test - Fixed</title>
     <style>
         * {
             margin: 0;
@@ -119,6 +119,15 @@
             text-align: center;
         }
 
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            align-self: center;
+            border: 1px solid #f5c6cb;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
         .message-info {
             font-size: 0.75em;
             opacity: 0.7;
@@ -169,6 +178,16 @@
             padding: 8px;
             border-radius: 5px;
             margin-top: 8px;
+        }
+
+        .debug-info {
+            background: #f0f8ff;
+            border: 1px solid #007bff;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.8em;
+            font-family: monospace;
         }
 
         .controls {
@@ -301,29 +320,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .workflow-info {
-            background: #f0f8ff;
-            border: 2px solid #007bff;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 15px;
-        }
-
-        .workflow-info h4 {
-            color: #007bff;
-            margin-bottom: 8px;
-        }
-
-        .workflow-path {
-            font-size: 0.8em;
-            color: #666;
-            background: #f9f9f9;
-            padding: 8px;
-            border-radius: 5px;
-            margin-top: 8px;
-            font-family: monospace;
-        }
-
         @media (max-width: 768px) {
             .container {
                 height: 100vh;
@@ -343,16 +339,16 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Test Workflow n8n JAK Company</h1>
-            <p>Interface de test pour le workflow n8n complet</p>
+            <h1>🚀 Test Workflow n8n - Version Corrigée</h1>
+            <p>Interface de test avec debug avancé</p>
             <div class="status" id="status">Déconnecté</div>
         </div>
         
         <div class="chat-container">
             <div class="messages" id="messages">
                 <div class="message system">
-                    🎯 Interface de test pour workflow n8n chargée !<br>
-                    Configure ton webhook n8n et teste l'IA complète 🚀
+                    🎯 Version corrigée avec debug avancé chargée !<br>
+                    Configure ton webhook et teste avec détection d'erreur améliorée 🚀
                 </div>
             </div>
             
@@ -362,36 +358,32 @@
                     <input type="text" 
                            id="webhookUrl" 
                            class="webhook-input"
-                           placeholder="https://ton-instance-n8n.com/webhook/jak-company-webhook"
+                           placeholder="https://ton-instance-n8n.com/webhook-test/jak-test-webhook"
                            value="">
                     <div class="webhook-help">
-                        💡 <strong>Comment obtenir l'URL :</strong><br>
-                        1. Dans n8n, clique sur le nœud "WhatsApp Trigger"<br>
-                        2. Copie l'URL du webhook affiché<br>
-                        3. Colle-la ici pour tester ton workflow complet
+                        💡 <strong>Étapes de configuration :</strong><br>
+                        1. Dans n8n : <strong>ACTIVE d'abord ton workflow</strong><br>
+                        2. Clique sur "Webhook Test Trigger"<br>
+                        3. Copie l'URL complète qui apparaît<br>
+                        4. Colle-la ici et teste !
                     </div>
-                </div>
-
-                <div class="workflow-info">
-                    <h4>🔄 Flux de test actuel :</h4>
-                    <div id="currentFlow">App Test → Webhook n8n → Workflow Complet → Réponse</div>
-                    <div class="workflow-path" id="workflowPath">
-                        En attente de configuration webhook...
+                    <div class="debug-info" id="debugInfo">
+                        🔍 Debug: En attente de configuration...
                     </div>
                 </div>
                 
                 <div class="controls">
                     <button class="control-btn" onclick="testWebhook()">🔌 Test webhook</button>
+                    <button class="control-btn" onclick="testCORS()">🌐 Test CORS</button>
                     <button class="control-btn" onclick="clearChat()">🗑️ Clear chat</button>
-                    <button class="control-btn" onclick="showWorkflowInfo()">📊 Info workflow</button>
+                    <button class="control-btn" onclick="showDebugInfo()">🔍 Debug info</button>
                 </div>
                 
                 <div class="quick-tests">
-                    <div class="quick-test" onclick="sendQuickTest('je veux être payé pour ma formation')">💰 Paiement (Bloc direct)</div>
-                    <div class="quick-test" onclick="sendQuickTest('comment devenir ambassadeur ?')">🎯 Ambassadeur (Bloc direct)</div>
-                    <div class="quick-test" onclick="sendQuickTest('j\\'ai une question sur mon entreprise')">🤖 Question IA</div>
-                    <div class="quick-test" onclick="sendQuickTest('vous êtes vraiment nuls !')">😡 Agressivité</div>
-                    <div class="quick-test" onclick="sendQuickTest('quand serai-je rémunéré ?')">🔄 API Python</div>
+                    <div class="quick-test" onclick="sendQuickTest('je veux être payé pour ma formation')">💰 Paiement</div>
+                    <div class="quick-test" onclick="sendQuickTest('comment devenir ambassadeur ?')">🎯 Ambassadeur</div>
+                    <div class="quick-test" onclick="sendQuickTest('j&apos;ai une question')">🤖 Question IA</div>
+                    <div class="quick-test" onclick="sendQuickTest('test connexion')">🔌 Test simple</div>
                 </div>
                 
                 <div class="input-wrapper">
@@ -412,12 +404,17 @@
     <script>
         let conversationId = 'n8n_test_' + Date.now();
         let isConnected = false;
+        let lastError = null;
 
         // Auto-resize textarea
         document.getElementById('messageInput').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 100) + 'px';
         });
+
+        function updateDebugInfo(info) {
+            document.getElementById('debugInfo').innerHTML = `🔍 Debug: ${info}`;
+        }
 
         function updateStatus(connected, message = '') {
             const status = document.getElementById('status');
@@ -426,7 +423,7 @@
             status.className = 'status ' + (connected ? 'connected' : 'disconnected');
             
             if (message) {
-                addMessage(`🔌 ${message}`, 'system');
+                addMessage(`🔌 ${message}`, connected ? 'system' : 'error');
             }
         }
 
@@ -442,8 +439,8 @@
             if (extra.metadata) {
                 messageContent += `<div class="message-info">📊 ${extra.metadata}</div>`;
             }
-            if (extra.workflow) {
-                messageContent += `<div class="message-info">🔄 ${extra.workflow}</div>`;
+            if (extra.debug) {
+                messageContent += `<div class="message-info">🔍 ${extra.debug}</div>`;
             }
             
             messageDiv.innerHTML = messageContent;
@@ -472,19 +469,53 @@
             }
         }
 
-        async function testWebhook() {
+        async function testCORS() {
             const webhookUrl = document.getElementById('webhookUrl').value.trim();
             if (!webhookUrl) {
-                addMessage('❌ Veuillez saisir l\'URL du webhook n8n', 'system');
+                addMessage('❌ Veuillez d\'abord saisir l\'URL du webhook', 'error');
                 return;
             }
 
+            updateDebugInfo('Test CORS en cours...');
+            
             try {
-                // Test avec un message simple
+                // Test simple de connexion
+                const response = await fetch(webhookUrl, {
+                    method: 'OPTIONS',
+                    mode: 'cors'
+                });
+                
+                updateDebugInfo(`CORS OK - Status: ${response.status}`);
+                addMessage('✅ Test CORS réussi - Le serveur n8n accepte les requêtes cross-origin', 'system');
+            } catch (error) {
+                updateDebugInfo(`CORS Error: ${error.message}`);
+                addMessage(`❌ Problème CORS détecté: ${error.message}`, 'error');
+                
+                // Suggestions de solution
+                addMessage(`
+                    💡 <strong>Solutions possibles :</strong><br>
+                    1. Vérifiez que l'URL est correcte<br>
+                    2. Assurez-vous que le workflow n8n est ACTIVÉ<br>
+                    3. L'instance n8n doit être accessible publiquement<br>
+                    4. Testez d'abord avec le trigger manuel dans n8n
+                `, 'system');
+            }
+        }
+
+        async function testWebhook() {
+            const webhookUrl = document.getElementById('webhookUrl').value.trim();
+            if (!webhookUrl) {
+                addMessage('❌ Veuillez saisir l\'URL du webhook n8n', 'error');
+                return;
+            }
+
+            updateDebugInfo('Test webhook en cours...');
+
+            try {
                 const testPayload = {
                     body: {
-                        text: "test connexion",
-                        from: "test_user_webhook"
+                        text: "test connexion webhook",
+                        from: "test_user_debug"
                     }
                 };
 
@@ -495,20 +526,40 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(testPayload)
+                    body: JSON.stringify(testPayload),
+                    mode: 'cors'
                 });
 
+                updateDebugInfo(`Response: ${response.status} ${response.statusText}`);
+
                 if (response.ok) {
+                    const responseText = await response.text();
                     updateStatus(true, 'Webhook n8n connecté avec succès !');
-                    document.getElementById('workflowPath').textContent = 
-                        'Webhook configuré → Workflow n8n actif → Prêt pour les tests';
+                    
+                    addMessage(`✅ Test réussi !<br>Réponse: ${responseText || 'Workflow exécuté'}`, 'system', {
+                        debug: `Status: ${response.status}, Type: ${response.headers.get('content-type')}`
+                    });
                 } else {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
             } catch (error) {
+                lastError = error;
+                updateDebugInfo(`Error: ${error.message}`);
                 updateStatus(false, `Erreur webhook: ${error.message}`);
-                document.getElementById('workflowPath').textContent = 
-                    'Erreur de connexion - Vérifiez l\'URL du webhook';
+                
+                // Diagnostic détaillé
+                if (error.message.includes('NetworkError') || error.message.includes('fetch')) {
+                    addMessage(`
+                        🔍 <strong>Diagnostic d'erreur réseau :</strong><br><br>
+                        ❌ <strong>Problème détecté :</strong> ${error.message}<br><br>
+                        💡 <strong>Vérifications :</strong><br>
+                        1. Le workflow n8n est-il ACTIVÉ ?<br>
+                        2. L'URL est-elle correcte ?<br>
+                        3. L'instance n8n est-elle accessible ?<br><br>
+                        🔧 <strong>Test manuel :</strong><br>
+                        Testez d'abord avec le trigger manuel dans n8n pour vérifier que le workflow fonctionne.
+                    `, 'error');
+                }
             }
         }
 
@@ -519,7 +570,7 @@
             
             if (!message) return;
             if (!webhookUrl) {
-                addMessage('❌ Configure d\'abord l\'URL du webhook n8n', 'system');
+                addMessage('❌ Configure d\'abord l\'URL du webhook n8n', 'error');
                 return;
             }
 
@@ -527,7 +578,6 @@
             sendBtn.disabled = true;
             sendBtn.innerHTML = '⏳';
 
-            // Afficher le message utilisateur
             addMessage(message, 'user', {
                 timestamp: new Date().toLocaleTimeString()
             });
@@ -536,9 +586,9 @@
             input.style.height = 'auto';
             
             showLoading();
+            updateDebugInfo(`Envoi message: "${message.substring(0, 50)}..."`);
 
             try {
-                // Payload au format WhatsApp pour n8n
                 const payload = {
                     body: {
                         text: message,
@@ -552,51 +602,52 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    mode: 'cors'
                 });
 
                 hideLoading();
+                updateDebugInfo(`Response: ${response.status} ${response.statusText}`);
 
                 if (response.ok) {
-                    // n8n peut retourner différents formats
                     let data;
                     const contentType = response.headers.get('content-type');
                     
                     if (contentType && contentType.includes('application/json')) {
                         data = await response.json();
                     } else {
-                        // Si n8n retourne du texte brut
                         const textResponse = await response.text();
-                        data = { response: textResponse || 'Réponse reçue du workflow n8n' };
+                        data = { response: textResponse || 'Workflow exécuté avec succès' };
                     }
                     
-                    // Afficher la réponse
-                    const responseText = data.response || data.message || data.output || 'Workflow exécuté avec succès';
+                    const responseText = data.response || data.message || data.output || 'Réponse reçue du workflow n8n';
                     
-                    // Metadata du workflow
-                    let metadata = 'Traité par workflow n8n';
+                    let metadata = `Status: ${response.status}`;
                     if (data.analytics) {
                         const proc = data.analytics.processing;
-                        metadata = `Type: ${proc.response_type} | Confiance: ${proc.confidence} | Chaîne: ${proc.processing_chain}`;
+                        metadata += ` | Type: ${proc.response_type} | Confiance: ${proc.confidence}`;
                     }
                     
                     addMessage(responseText, 'bot', {
                         timestamp: new Date().toLocaleTimeString(),
                         metadata: metadata,
-                        workflow: data.analytics ? `Bloc: ${data.analytics.processing.bloc_matched || 'Aucun'}` : ''
+                        debug: `Chaîne: ${data.analytics?.processing?.processing_chain || 'Non disponible'}`
                     });
 
-                    // Info escalade
-                    if (data.escalade_info && data.escalade_info.required) {
+                    if (data.escalade_info?.required) {
                         addMessage(`🔔 Escalade requise: ${data.escalade_info.type}`, 'system');
                     }
                 } else {
                     const errorText = await response.text();
-                    addMessage(`❌ Erreur workflow n8n (${response.status}): ${errorText}`, 'system');
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
                 }
             } catch (error) {
                 hideLoading();
-                addMessage(`❌ Erreur réseau: ${error.message}`, 'system');
+                lastError = error;
+                updateDebugInfo(`Send Error: ${error.message}`);
+                addMessage(`❌ Erreur envoi message: ${error.message}`, 'error', {
+                    debug: 'Vérifiez la configuration et l\'état du workflow n8n'
+                });
             } finally {
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = '▶️';
@@ -604,24 +655,25 @@
             }
         }
 
-        function clearChat() {
-            const messages = document.getElementById('messages');
-            messages.innerHTML = '<div class="message system">🧹 Chat effacé. Prêt pour de nouveaux tests ! 🚀</div>';
-        }
-
-        function showWorkflowInfo() {
+        function showDebugInfo() {
             const info = `
-🔄 <strong>Flux de traitement n8n :</strong><br><br>
-1️⃣ <strong>WhatsApp Trigger</strong> - Reçoit le message<br>
-2️⃣ <strong>Input Validation</strong> - Nettoie et valide<br>
-3️⃣ <strong>Enhanced Fuzzy Matcher</strong> - Trouve les correspondances<br>
-4️⃣ <strong>Décision IA</strong> - Choix entre bloc/IA/API<br>
-5️⃣ <strong>OpenAI Agent</strong> - Génère réponse intelligente (si nécessaire)<br>
-6️⃣ <strong>Response Router</strong> - Combine les sources<br>
-7️⃣ <strong>Analytics</strong> - Log les métriques<br>
-8️⃣ <strong>Retour à l'app</strong> - Affichage final
+                🔍 <strong>Informations de debug :</strong><br><br>
+                📍 <strong>URL actuelle :</strong> ${document.getElementById('webhookUrl').value || 'Non configurée'}<br>
+                🔌 <strong>Status connexion :</strong> ${isConnected ? 'Connecté' : 'Déconnecté'}<br>
+                🆔 <strong>Session ID :</strong> ${conversationId}<br>
+                ⚠️ <strong>Dernière erreur :</strong> ${lastError?.message || 'Aucune'}<br>
+                🌐 <strong>User Agent :</strong> ${navigator.userAgent.substring(0, 50)}...<br><br>
+                💡 <strong>Conseils :</strong><br>
+                - Vérifiez que le workflow n8n est activé<br>
+                - Testez d'abord avec le trigger manuel<br>
+                - L'URL doit être accessible publiquement
             `;
             addMessage(info, 'system');
+        }
+
+        function clearChat() {
+            document.getElementById('messages').innerHTML = '<div class="message system">🧹 Chat effacé. Prêt pour de nouveaux tests ! 🚀</div>';
+            updateDebugInfo('Chat effacé - Prêt pour nouveaux tests');
         }
 
         function sendQuickTest(message) {
@@ -636,19 +688,21 @@
             }
         }
 
-        // Focus automatique sur l'input
+        // Focus automatique
         document.getElementById('messageInput').focus();
 
         // Message d'aide au démarrage
         setTimeout(() => {
             addMessage(`
-                📋 <strong>Guide de configuration :</strong><br><br>
-                1️⃣ Dans n8n, va sur le nœud "WhatsApp Trigger"<br>
-                2️⃣ Copie l'URL du webhook<br>
-                3️⃣ Colle-la dans le champ ci-dessus<br>
-                4️⃣ Clique "Test webhook"<br>
-                5️⃣ Lance tes tests ! 🚀
+                📋 <strong>Guide de résolution d'erreur :</strong><br><br>
+                1️⃣ <strong>IMPORTANT :</strong> Active d'abord ton workflow dans n8n<br>
+                2️⃣ Va sur le nœud "Webhook Test Trigger"<br>
+                3️⃣ Copie l'URL exacte qui apparaît<br>
+                4️⃣ Colle-la ci-dessus et teste<br>
+                5️⃣ Utilise les boutons de debug si problème ! 🔍
             `, 'system');
+            
+            updateDebugInfo('Application chargée - En attente de configuration');
         }, 1000);
     </script>
 </body>
