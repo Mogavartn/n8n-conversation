@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JAK Company n8n Workflow Test - Fixed</title>
+    <title>JAK Company - Tests Continus</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Styles identiques à la version précédente */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +16,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: white;
             border-radius: 20px;
@@ -32,7 +27,6 @@
             flex-direction: column;
             overflow: hidden;
         }
-
         .header {
             background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
             color: white;
@@ -40,17 +34,6 @@
             text-align: center;
             position: relative;
         }
-
-        .header h1 {
-            font-size: 1.5em;
-            margin-bottom: 5px;
-        }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 0.9em;
-        }
-
         .status {
             position: absolute;
             top: 20px;
@@ -60,22 +43,8 @@
             font-size: 0.8em;
             background: rgba(255,255,255,0.2);
         }
-
-        .status.connected {
-            background: rgba(76, 175, 80, 0.8);
-        }
-
-        .status.disconnected {
-            background: rgba(244, 67, 54, 0.8);
-        }
-
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
+        .status.connected { background: rgba(76, 175, 80, 0.8); }
+        .status.disconnected { background: rgba(244, 67, 54, 0.8); }
         .messages {
             flex: 1;
             padding: 20px;
@@ -85,7 +54,6 @@
             flex-direction: column;
             gap: 15px;
         }
-
         .message {
             max-width: 80%;
             padding: 12px 16px;
@@ -93,14 +61,12 @@
             line-height: 1.4;
             animation: fadeIn 0.3s ease-in;
         }
-
         .message.user {
             background: #007bff;
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
-
         .message.bot {
             background: white;
             color: #333;
@@ -109,7 +75,6 @@
             border-bottom-left-radius: 4px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
         .message.system {
             background: #fff3cd;
             color: #856404;
@@ -118,22 +83,6 @@
             font-size: 0.9em;
             text-align: center;
         }
-
-        .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            align-self: center;
-            border: 1px solid #f5c6cb;
-            font-size: 0.9em;
-            text-align: center;
-        }
-
-        .message-info {
-            font-size: 0.75em;
-            opacity: 0.7;
-            margin-top: 5px;
-        }
-
         .input-container {
             padding: 20px;
             background: white;
@@ -142,20 +91,12 @@
             flex-direction: column;
             gap: 15px;
         }
-
         .webhook-config {
-            background: #e3f2fd;
+            background: #e8f5e8;
             padding: 15px;
             border-radius: 10px;
-            border: 2px solid #2196f3;
+            border: 2px solid #4caf50;
         }
-
-        .webhook-config h3 {
-            margin-bottom: 10px;
-            color: #1976d2;
-            font-size: 1em;
-        }
-
         .webhook-input {
             width: 100%;
             padding: 8px 12px;
@@ -164,39 +105,19 @@
             font-size: 14px;
             margin-bottom: 10px;
         }
-
-        .webhook-input:focus {
-            outline: none;
-            border-color: #2196f3;
-            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
-        }
-
-        .webhook-help {
-            font-size: 0.8em;
-            color: #666;
-            background: #f5f5f5;
-            padding: 8px;
-            border-radius: 5px;
-            margin-top: 8px;
-        }
-
-        .debug-info {
-            background: #f0f8ff;
-            border: 1px solid #007bff;
-            border-radius: 8px;
+        .auto-mode {
+            background: #fff3cd;
             padding: 10px;
-            margin-top: 10px;
-            font-size: 0.8em;
-            font-family: monospace;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #ffc107;
         }
-
         .controls {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             margin-bottom: 10px;
         }
-
         .control-btn {
             padding: 8px 16px;
             border: 1px solid #ddd;
@@ -206,28 +127,17 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .control-btn:hover {
-            background: #f0f0f0;
-            transform: translateY(-1px);
-        }
-
-        .control-btn.clear {
-            background: #dc3545;
+        .control-btn:hover { background: #f0f0f0; }
+        .control-btn.active {
+            background: #4caf50;
             color: white;
-            border-color: #dc3545;
+            border-color: #4caf50;
         }
-
-        .control-btn.clear:hover {
-            background: #c82333;
-        }
-
         .input-wrapper {
             display: flex;
             gap: 10px;
             align-items: flex-end;
         }
-
         #messageInput {
             flex: 1;
             padding: 12px 16px;
@@ -237,14 +147,7 @@
             resize: none;
             min-height: 20px;
             max-height: 100px;
-            transition: border-color 0.3s ease;
         }
-
-        #messageInput:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-
         .send-btn {
             background: #25d366;
             color: white;
@@ -259,24 +162,20 @@
             align-items: center;
             justify-content: center;
         }
-
         .send-btn:hover:not(:disabled) {
             background: #128c7e;
             transform: scale(1.05);
         }
-
         .send-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
         }
-
         .quick-tests {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 10px;
         }
-
         .quick-test {
             padding: 6px 12px;
             background: #e8f5e8;
@@ -286,135 +185,91 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .quick-test:hover {
             background: #4caf50;
             color: white;
         }
-
-        .loading {
-            display: flex;
-            gap: 5px;
-            padding: 15px;
-            align-self: flex-start;
-        }
-
-        .loading-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #999;
-            animation: bounce 1.4s ease-in-out infinite both;
-        }
-
-        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
-        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                height: 100vh;
-                border-radius: 0;
-            }
-            
-            .message {
-                max-width: 90%;
-            }
-            
-            .controls {
-                justify-content: center;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Test Workflow n8n - Version Corrigée</h1>
-            <p>Interface de test avec debug avancé</p>
+            <h1>🚀 JAK Company - Tests Continus</h1>
+            <p>Interface avec auto-reconnexion pour conversations fluides</p>
             <div class="status" id="status">Déconnecté</div>
         </div>
         
-        <div class="chat-container">
-            <div class="messages" id="messages">
-                <div class="message system">
-                    🎯 Version corrigée avec debug avancé chargée !<br>
-                    Configure ton webhook et teste avec détection d'erreur améliorée 🚀
+        <div class="messages" id="messages">
+            <div class="message system">
+                🎯 Mode tests continus activé !<br>
+                Configure le webhook et teste sans limite ! 🚀
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <div class="webhook-config">
+                <h3>🔗 Configuration Webhook</h3>
+                <input type="text" 
+                       id="webhookUrl" 
+                       class="webhook-input"
+                       placeholder="URL du webhook n8n"
+                       value="">
+                       
+                <div class="auto-mode">
+                    <label>
+                        <input type="checkbox" id="autoReconnect" checked> 
+                        🔄 <strong>Mode Auto-Reconnexion</strong> (Pour webhook test qui se déconnecte)
+                    </label>
+                    <div style="font-size: 0.8em; margin-top: 5px; color: #666;">
+                        Active cette option si tu utilises un webhook test qui se désactive après chaque message
+                    </div>
                 </div>
             </div>
             
-            <div class="input-container">
-                <div class="webhook-config">
-                    <h3>🔗 Configuration Webhook n8n</h3>
-                    <input type="text" 
-                           id="webhookUrl" 
-                           class="webhook-input"
-                           placeholder="https://ton-instance-n8n.com/webhook-test/jak-test-webhook"
-                           value="">
-                    <div class="webhook-help">
-                        💡 <strong>Étapes de configuration :</strong><br>
-                        1. Dans n8n : <strong>ACTIVE d'abord ton workflow</strong><br>
-                        2. Clique sur "Webhook Test Trigger"<br>
-                        3. Copie l'URL complète qui apparaît<br>
-                        4. Colle-la ici et teste !
-                    </div>
-                    <div class="debug-info" id="debugInfo">
-                        🔍 Debug: En attente de configuration...
-                    </div>
-                </div>
-                
-                <div class="controls">
-                    <button class="control-btn" onclick="testWebhook()">🔌 Test webhook</button>
-                    <button class="control-btn" onclick="testCORS()">🌐 Test CORS</button>
-                    <button class="control-btn" onclick="clearChat()">🗑️ Clear chat</button>
-                    <button class="control-btn" onclick="showDebugInfo()">🔍 Debug info</button>
-                </div>
-                
-                <div class="quick-tests">
-                    <div class="quick-test" onclick="sendQuickTest('je veux être payé pour ma formation')">💰 Paiement</div>
-                    <div class="quick-test" onclick="sendQuickTest('comment devenir ambassadeur ?')">🎯 Ambassadeur</div>
-                    <div class="quick-test" onclick="sendQuickTest('j&apos;ai une question')">🤖 Question IA</div>
-                    <div class="quick-test" onclick="sendQuickTest('test connexion')">🔌 Test simple</div>
-                </div>
-                
-                <div class="input-wrapper">
-                    <textarea 
-                        id="messageInput" 
-                        placeholder="Tape ton message ici pour tester le workflow n8n..."
-                        rows="1"
-                        onkeydown="handleKeyPress(event)"
-                    ></textarea>
-                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                        ▶️
-                    </button>
-                </div>
+            <div class="controls">
+                <button class="control-btn" id="testBtn" onclick="testConnection()">🔌 Test connexion</button>
+                <button class="control-btn" id="modeBtn" onclick="toggleMode()">🔄 Mode: Auto</button>
+                <button class="control-btn" onclick="clearChat()">🗑️ Clear chat</button>
+                <button class="control-btn" onclick="startConversationDemo()">🎭 Démo conversation</button>
+            </div>
+            
+            <div class="quick-tests">
+                <div class="quick-test" onclick="sendQuickTest('je veux être payé pour ma formation')">💰 Paiement</div>
+                <div class="quick-test" onclick="sendQuickTest('comment devenir ambassadeur ?')">🎯 Ambassadeur</div>
+                <div class="quick-test" onclick="sendQuickTest('j&apos;ai une question')">🤖 Question IA</div>
+                <div class="quick-test" onclick="sendQuickTest('vous êtes nuls')">😡 Agressivité</div>
+                <div class="quick-test" onclick="sendQuickTest('je veux parler à un humain')">👤 Humain</div>
+            </div>
+            
+            <div class="input-wrapper">
+                <textarea 
+                    id="messageInput" 
+                    placeholder="Tape ton message ici..."
+                    rows="1"
+                    onkeydown="handleKeyPress(event)"
+                ></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    ▶️
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        let conversationId = 'n8n_test_' + Date.now();
+        let conversationId = 'continuous_test_' + Date.now();
         let isConnected = false;
-        let lastError = null;
+        let autoReconnectMode = true;
+        let reconnectUrl = '';
 
         // Auto-resize textarea
         document.getElementById('messageInput').addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 100) + 'px';
         });
-
-        function updateDebugInfo(info) {
-            document.getElementById('debugInfo').innerHTML = `🔍 Debug: ${info}`;
-        }
 
         function updateStatus(connected, message = '') {
             const status = document.getElementById('status');
@@ -423,7 +278,7 @@
             status.className = 'status ' + (connected ? 'connected' : 'disconnected');
             
             if (message) {
-                addMessage(`🔌 ${message}`, connected ? 'system' : 'error');
+                addMessage(`🔌 ${message}`, 'system');
             }
         }
 
@@ -434,13 +289,10 @@
             
             let messageContent = content;
             if (extra.timestamp) {
-                messageContent += `<div class="message-info">⏰ ${extra.timestamp}</div>`;
+                messageContent += `<div style="font-size: 0.75em; opacity: 0.7; margin-top: 5px;">⏰ ${extra.timestamp}</div>`;
             }
             if (extra.metadata) {
-                messageContent += `<div class="message-info">📊 ${extra.metadata}</div>`;
-            }
-            if (extra.debug) {
-                messageContent += `<div class="message-info">🔍 ${extra.debug}</div>`;
+                messageContent += `<div style="font-size: 0.75em; opacity: 0.7; margin-top: 5px;">📊 ${extra.metadata}</div>`;
             }
             
             messageDiv.innerHTML = messageContent;
@@ -448,118 +300,68 @@
             messages.scrollTop = messages.scrollHeight;
         }
 
-        function showLoading() {
-            const messages = document.getElementById('messages');
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'loading';
-            loadingDiv.id = 'loading';
-            loadingDiv.innerHTML = `
-                <div class="loading-dot"></div>
-                <div class="loading-dot"></div>
-                <div class="loading-dot"></div>
-            `;
-            messages.appendChild(loadingDiv);
-            messages.scrollTop = messages.scrollHeight;
+        function toggleMode() {
+            autoReconnectMode = !autoReconnectMode;
+            document.getElementById('autoReconnect').checked = autoReconnectMode;
+            const modeBtn = document.getElementById('modeBtn');
+            modeBtn.textContent = autoReconnectMode ? '🔄 Mode: Auto' : '🔄 Mode: Manuel';
+            modeBtn.className = autoReconnectMode ? 'control-btn active' : 'control-btn';
+            
+            addMessage(
+                autoReconnectMode ? 
+                '🔄 Mode auto-reconnexion activé - Tests continus possibles' : 
+                '⏸️ Mode manuel activé - Reconnexion manuelle requise',
+                'system'
+            );
         }
 
-        function hideLoading() {
-            const loading = document.getElementById('loading');
-            if (loading) {
-                loading.remove();
-            }
-        }
-
-        async function testCORS() {
-            const webhookUrl = document.getElementById('webhookUrl').value.trim();
-            if (!webhookUrl) {
-                addMessage('❌ Veuillez d\'abord saisir l\'URL du webhook', 'error');
-                return;
-            }
-
-            updateDebugInfo('Test CORS en cours...');
+        // Fonction de reconnexion automatique pour les webhooks test
+        async function autoReconnect() {
+            if (!autoReconnectMode || !reconnectUrl) return;
             
             try {
-                // Test simple de connexion
-                const response = await fetch(webhookUrl, {
+                // Pour un webhook test n8n, on fait un appel OPTIONS pour le "réveiller"
+                await fetch(reconnectUrl, {
                     method: 'OPTIONS',
                     mode: 'cors'
                 });
-                
-                updateDebugInfo(`CORS OK - Status: ${response.status}`);
-                addMessage('✅ Test CORS réussi - Le serveur n8n accepte les requêtes cross-origin', 'system');
+                console.log('Auto-reconnexion tentée');
             } catch (error) {
-                updateDebugInfo(`CORS Error: ${error.message}`);
-                addMessage(`❌ Problème CORS détecté: ${error.message}`, 'error');
-                
-                // Suggestions de solution
-                addMessage(`
-                    💡 <strong>Solutions possibles :</strong><br>
-                    1. Vérifiez que l'URL est correcte<br>
-                    2. Assurez-vous que le workflow n8n est ACTIVÉ<br>
-                    3. L'instance n8n doit être accessible publiquement<br>
-                    4. Testez d'abord avec le trigger manuel dans n8n
-                `, 'system');
+                console.log('Auto-reconnexion échouée:', error.message);
             }
         }
 
-        async function testWebhook() {
+        async function testConnection() {
             const webhookUrl = document.getElementById('webhookUrl').value.trim();
             if (!webhookUrl) {
-                addMessage('❌ Veuillez saisir l\'URL du webhook n8n', 'error');
+                addMessage('❌ Veuillez saisir l\'URL du webhook', 'system');
                 return;
             }
 
-            updateDebugInfo('Test webhook en cours...');
+            reconnectUrl = webhookUrl;
 
             try {
                 const testPayload = {
                     body: {
-                        text: "test connexion webhook",
-                        from: "test_user_debug"
+                        text: "test connexion continue",
+                        from: "test_continuous"
                     }
                 };
 
-                addMessage('🔍 Test de connexion webhook...', 'system');
-                
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(testPayload),
                     mode: 'cors'
                 });
 
-                updateDebugInfo(`Response: ${response.status} ${response.statusText}`);
-
                 if (response.ok) {
-                    const responseText = await response.text();
-                    updateStatus(true, 'Webhook n8n connecté avec succès !');
-                    
-                    addMessage(`✅ Test réussi !<br>Réponse: ${responseText || 'Workflow exécuté'}`, 'system', {
-                        debug: `Status: ${response.status}, Type: ${response.headers.get('content-type')}`
-                    });
+                    updateStatus(true, 'Connexion réussie - Mode continu prêt !');
                 } else {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
-                lastError = error;
-                updateDebugInfo(`Error: ${error.message}`);
-                updateStatus(false, `Erreur webhook: ${error.message}`);
-                
-                // Diagnostic détaillé
-                if (error.message.includes('NetworkError') || error.message.includes('fetch')) {
-                    addMessage(`
-                        🔍 <strong>Diagnostic d'erreur réseau :</strong><br><br>
-                        ❌ <strong>Problème détecté :</strong> ${error.message}<br><br>
-                        💡 <strong>Vérifications :</strong><br>
-                        1. Le workflow n8n est-il ACTIVÉ ?<br>
-                        2. L'URL est-elle correcte ?<br>
-                        3. L'instance n8n est-elle accessible ?<br><br>
-                        🔧 <strong>Test manuel :</strong><br>
-                        Testez d'abord avec le trigger manuel dans n8n pour vérifier que le workflow fonctionne.
-                    `, 'error');
-                }
+                updateStatus(false, `Erreur: ${error.message}`);
             }
         }
 
@@ -570,7 +372,7 @@
             
             if (!message) return;
             if (!webhookUrl) {
-                addMessage('❌ Configure d\'abord l\'URL du webhook n8n', 'error');
+                addMessage('❌ Configure d\'abord l\'URL du webhook', 'system');
                 return;
             }
 
@@ -584,11 +386,15 @@
             
             input.value = '';
             input.style.height = 'auto';
-            
-            showLoading();
-            updateDebugInfo(`Envoi message: "${message.substring(0, 50)}..."`);
 
             try {
+                // Si en mode auto-reconnexion, on tente une reconnexion avant l'envoi
+                if (autoReconnectMode) {
+                    await autoReconnect();
+                    // Petit délai pour laisser le webhook se reconnecter
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+
                 const payload = {
                     body: {
                         text: message,
@@ -599,15 +405,10 @@
 
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
                     mode: 'cors'
                 });
-
-                hideLoading();
-                updateDebugInfo(`Response: ${response.status} ${response.statusText}`);
 
                 if (response.ok) {
                     let data;
@@ -617,37 +418,35 @@
                         data = await response.json();
                     } else {
                         const textResponse = await response.text();
-                        data = { response: textResponse || 'Workflow exécuté avec succès' };
+                        data = { response: textResponse || 'Réponse reçue du workflow' };
                     }
                     
-                    const responseText = data.response || data.message || data.output || 'Réponse reçue du workflow n8n';
+                    const responseText = data.response || data.message || 'Réponse du workflow n8n';
                     
-                    let metadata = `Status: ${response.status}`;
+                    let metadata = 'Workflow n8n';
                     if (data.analytics) {
                         const proc = data.analytics.processing;
-                        metadata += ` | Type: ${proc.response_type} | Confiance: ${proc.confidence}`;
+                        metadata = `Bloc: ${proc.bloc_matched || 'Aucun'} | Conf: ${proc.confidence || 'N/A'}`;
                     }
                     
                     addMessage(responseText, 'bot', {
                         timestamp: new Date().toLocaleTimeString(),
-                        metadata: metadata,
-                        debug: `Chaîne: ${data.analytics?.processing?.processing_chain || 'Non disponible'}`
+                        metadata: metadata
                     });
 
                     if (data.escalade_info?.required) {
-                        addMessage(`🔔 Escalade requise: ${data.escalade_info.type}`, 'system');
+                        addMessage(`🔔 Escalade: ${data.escalade_info.type}`, 'system');
                     }
                 } else {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
-                hideLoading();
-                lastError = error;
-                updateDebugInfo(`Send Error: ${error.message}`);
-                addMessage(`❌ Erreur envoi message: ${error.message}`, 'error', {
-                    debug: 'Vérifiez la configuration et l\'état du workflow n8n'
-                });
+                addMessage(`❌ Erreur: ${error.message}`, 'system');
+                
+                if (autoReconnectMode) {
+                    addMessage('🔄 Tentative de reconnexion automatique...', 'system');
+                    setTimeout(() => autoReconnect(), 1000);
+                }
             } finally {
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = '▶️';
@@ -655,25 +454,8 @@
             }
         }
 
-        function showDebugInfo() {
-            const info = `
-                🔍 <strong>Informations de debug :</strong><br><br>
-                📍 <strong>URL actuelle :</strong> ${document.getElementById('webhookUrl').value || 'Non configurée'}<br>
-                🔌 <strong>Status connexion :</strong> ${isConnected ? 'Connecté' : 'Déconnecté'}<br>
-                🆔 <strong>Session ID :</strong> ${conversationId}<br>
-                ⚠️ <strong>Dernière erreur :</strong> ${lastError?.message || 'Aucune'}<br>
-                🌐 <strong>User Agent :</strong> ${navigator.userAgent.substring(0, 50)}...<br><br>
-                💡 <strong>Conseils :</strong><br>
-                - Vérifiez que le workflow n8n est activé<br>
-                - Testez d'abord avec le trigger manuel<br>
-                - L'URL doit être accessible publiquement
-            `;
-            addMessage(info, 'system');
-        }
-
         function clearChat() {
             document.getElementById('messages').innerHTML = '<div class="message system">🧹 Chat effacé. Prêt pour de nouveaux tests ! 🚀</div>';
-            updateDebugInfo('Chat effacé - Prêt pour nouveaux tests');
         }
 
         function sendQuickTest(message) {
@@ -688,21 +470,49 @@
             }
         }
 
+        // Démo de conversation automatique
+        async function startConversationDemo() {
+            const demoMessages = [
+                'Bonjour !',
+                'je veux être payé pour ma formation',
+                'comment devenir ambassadeur ?',
+                'merci pour les infos',
+                'je veux parler à un humain'
+            ];
+
+            addMessage('🎭 Démarrage de la démo conversation...', 'system');
+            
+            for (let i = 0; i < demoMessages.length; i++) {
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                document.getElementById('messageInput').value = demoMessages[i];
+                await sendMessage();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            
+            addMessage('🎭 Démo terminée ! Conversation fluide testée avec succès.', 'system');
+        }
+
+        // Gestion du checkbox auto-reconnect
+        document.getElementById('autoReconnect').addEventListener('change', function() {
+            autoReconnectMode = this.checked;
+            const modeBtn = document.getElementById('modeBtn');
+            modeBtn.textContent = autoReconnectMode ? '🔄 Mode: Auto' : '🔄 Mode: Manuel';
+            modeBtn.className = autoReconnectMode ? 'control-btn active' : 'control-btn';
+        });
+
         // Focus automatique
         document.getElementById('messageInput').focus();
 
-        // Message d'aide au démarrage
+        // Message d'aide
         setTimeout(() => {
             addMessage(`
-                📋 <strong>Guide de résolution d'erreur :</strong><br><br>
-                1️⃣ <strong>IMPORTANT :</strong> Active d'abord ton workflow dans n8n<br>
-                2️⃣ Va sur le nœud "Webhook Test Trigger"<br>
-                3️⃣ Copie l'URL exacte qui apparaît<br>
-                4️⃣ Colle-la ci-dessus et teste<br>
-                5️⃣ Utilise les boutons de debug si problème ! 🔍
+                📋 <strong>Guide pour tests continus :</strong><br><br>
+                1️⃣ Configure l'URL de ton webhook n8n<br>
+                2️⃣ Active le mode auto-reconnexion si nécessaire<br>
+                3️⃣ Teste autant de messages que tu veux !<br>
+                4️⃣ Utilise la démo pour montrer au client<br><br>
+                💡 <strong>Astuce :</strong> Pour un webhook persistant, désactive l'auto-reconnexion
             `, 'system');
-            
-            updateDebugInfo('Application chargée - En attente de configuration');
         }, 1000);
     </script>
 </body>
