@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAK Company - Tests Continus (CORRIGÉ)</title>
+<title>JAK Company - Tests Continus (Clear Chat Amélioré)</title>
 <style>
-/* Styles identiques à la version précédente */
+/* Styles identiques... */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -45,6 +45,18 @@ background: rgba(255,255,255,0.2);
 }
 .status.connected { background: rgba(76, 175, 80, 0.8); }
 .status.disconnected { background: rgba(244, 67, 54, 0.8); }
+.user-info {
+position: absolute;
+top: 20px;
+left: 20px;
+padding: 5px 10px;
+border-radius: 15px;
+font-size: 0.7em;
+background: rgba(255,255,255,0.2);
+max-width: 200px;
+overflow: hidden;
+text-overflow: ellipsis;
+}
 .messages {
 flex: 1;
 padding: 20px;
@@ -105,13 +117,6 @@ border-radius: 8px;
 font-size: 14px;
 margin-bottom: 10px;
 }
-.auto-mode {
-background: #fff3cd;
-padding: 10px;
-border-radius: 8px;
-margin: 10px 0;
-border: 1px solid #ffc107;
-}
 .controls {
 display: flex;
 gap: 10px;
@@ -132,6 +137,14 @@ transition: all 0.3s ease;
 background: #4caf50;
 color: white;
 border-color: #4caf50;
+}
+.control-btn.clear {
+background: #ff6b6b;
+color: white;
+border-color: #ff6b6b;
+}
+.control-btn.clear:hover {
+background: #ff5252;
 }
 .input-wrapper {
 display: flex;
@@ -198,17 +211,18 @@ to { opacity: 1; transform: translateY(0); }
 <body>
 <div class="container">
 <div class="header">
-<h1>🤖 JAK Company - Tests Continus (CORRIGÉ)</h1>
-<p>Interface avec auto-reconnexion pour conversations fluides</p>
+<h1>🤖 JAK Company - Clear Chat Amélioré</h1>
+<p>Interface avec vraie gestion de nouveaux utilisateurs</p>
+<div class="user-info" id="userInfo">ID: loading...</div>
 <div class="status" id="status">Déconnecté</div>
 </div>
 
 <div class="messages" id="messages">
 <div class="message system">
-🔧 Mode tests continus CORRIGÉ !<br>
-✅ URL webhook corrigée<br>
-✅ Gestion CORS améliorée<br>
-✅ Gestion d'erreur robuste ! 🚀
+🔧 Clear Chat amélioré !<br>
+✅ Efface le chat ET la mémoire serveur<br>
+✅ Génère un nouvel ID utilisateur<br>
+✅ Vraie simulation nouveau client ! 🚀
 </div>
 </div>
 
@@ -220,22 +234,12 @@ id="webhookUrl"
 class="webhook-input"
 placeholder="URL du webhook n8n"
 value="https://kevinjean.app.n8n.cloud/webhook-test/jak-fixed-webhook">
-
-<div class="auto-mode">
-<label>
-<input type="checkbox" id="autoReconnect" checked>
-🔄 <strong>Mode Auto-Reconnexion</strong> (Pour webhook test qui se déconnecte)
-</label>
-<div style="font-size: 0.8em; margin-top: 5px; color: #666;">
-Active cette option si tu utilises un webhook test qui se désactive après chaque message
-</div>
-</div>
 </div>
 
 <div class="controls">
-<button class="control-btn" id="testBtn" onclick="testConnection()">🔍 Test connexion</button>
-<button class="control-btn" id="modeBtn" onclick="toggleMode()">🔄 Mode: Auto</button>
-<button class="control-btn" onclick="clearChat()">🗑️ Clear chat</button>
+<button class="control-btn" onclick="testConnection()">🔍 Test connexion</button>
+<button class="control-btn clear" onclick="clearChatAndMemory()">🗑️ Clear Chat + Nouvel Utilisateur</button>
+<button class="control-btn" onclick="clearMemoryOnly()">🧠 Clear Mémoire Seulement</button>
 <button class="control-btn" onclick="startConversationDemo()">🎬 Démo conversation</button>
 </div>
 
@@ -262,10 +266,18 @@ onkeydown="handleKeyPress(event)"
 </div>
 
 <script>
-let conversationId = 'continuous_test_' + Date.now();
+let conversationId = generateNewUserId();
 let isConnected = false;
-let autoReconnectMode = true;
-let reconnectUrl = '';
+
+// Générer un nouvel ID utilisateur
+function generateNewUserId() {
+return 'test_user_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+}
+
+// Mettre à jour l'affichage de l'ID utilisateur
+function updateUserInfo() {
+document.getElementById('userInfo').textContent = `ID: ${conversationId.substring(0, 20)}...`;
+}
 
 // Auto-resize textarea
 document.getElementById('messageInput').addEventListener('input', function() {
@@ -302,37 +314,6 @@ messages.appendChild(messageDiv);
 messages.scrollTop = messages.scrollHeight;
 }
 
-function toggleMode() {
-autoReconnectMode = !autoReconnectMode;
-document.getElementById('autoReconnect').checked = autoReconnectMode;
-const modeBtn = document.getElementById('modeBtn');
-modeBtn.textContent = autoReconnectMode ? '🔄 Mode: Auto' : '⏸️ Mode: Manuel';
-modeBtn.className = autoReconnectMode ? 'control-btn active' : 'control-btn';
-
-addMessage(
-autoReconnectMode ?
-'🔄 Mode auto-reconnexion activé - Tests continus possibles' :
-'⏸️ Mode manuel activé - Reconnexion manuelle requise',
-'system'
-);
-}
-
-// Fonction de reconnexion automatique pour les webhooks test
-async function autoReconnect() {
-if (!autoReconnectMode || !reconnectUrl) return;
-
-try {
-// Pour un webhook test n8n, on fait un appel OPTIONS pour le "réveiller"
-await fetch(reconnectUrl, {
-method: 'OPTIONS',
-mode: 'no-cors' // CORRECTION : mode no-cors pour éviter CORS
-});
-console.log('Auto-reconnexion tentée');
-} catch (error) {
-console.log('Auto-reconnexion échouée:', error.message);
-}
-}
-
 async function testConnection() {
 const webhookUrl = document.getElementById('webhookUrl').value.trim();
 if (!webhookUrl) {
@@ -340,13 +321,11 @@ addMessage('❌ Veuillez saisir l\'URL du webhook', 'system');
 return;
 }
 
-reconnectUrl = webhookUrl;
-
 try {
 const testPayload = {
 body: {
-text: "test connexion continue",
-from: "test_continuous"
+text: "test connexion",
+from: conversationId
 }
 };
 
@@ -354,13 +333,74 @@ const response = await fetch(webhookUrl, {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify(testPayload),
-mode: 'no-cors' // CORRECTION : Éviter les erreurs CORS
+mode: 'no-cors'
 });
 
-// Avec no-cors, on ne peut pas lire la réponse, mais on peut détecter si la requête est partie
-updateStatus(true, 'Connexion testée - Mode continu prêt !');
+updateStatus(true, 'Connexion testée - Prêt !');
 } catch (error) {
 updateStatus(false, `Erreur: ${error.message}`);
+}
+}
+
+// NOUVEAU : Clear chat ET génère un nouvel utilisateur
+async function clearChatAndMemory() {
+try {
+// 1. Effacer la mémoire côté serveur (si l'API le permet)
+await clearServerMemory();
+
+// 2. Générer un nouvel ID utilisateur
+const oldId = conversationId;
+conversationId = generateNewUserId();
+updateUserInfo();
+
+// 3. Effacer le chat visuel
+document.getElementById('messages').innerHTML = `
+<div class="message system">
+🗑️ Chat effacé ET mémoire serveur vidée !<br>
+👤 Ancien utilisateur : ${oldId.substring(0, 15)}...<br>
+🆕 Nouvel utilisateur : ${conversationId.substring(0, 15)}...<br>
+✅ Prêt pour une nouvelle conversation ! 🚀
+</div>`;
+
+addMessage('🎉 Vous êtes maintenant un nouvel utilisateur !', 'system');
+
+} catch (error) {
+console.error('Erreur lors du clear:', error);
+addMessage('⚠️ Chat effacé localement, nouvel ID généré !', 'system');
+}
+}
+
+// NOUVEAU : Clear mémoire serveur seulement
+async function clearMemoryOnly() {
+try {
+await clearServerMemory();
+addMessage(`🧠 Mémoire serveur effacée pour ${conversationId.substring(0, 15)}...`, 'system');
+} catch (error) {
+addMessage('⚠️ Impossible d\'effacer la mémoire serveur', 'system');
+}
+}
+
+// Fonction pour effacer la mémoire côté serveur
+async function clearServerMemory() {
+const webhookUrl = document.getElementById('webhookUrl').value.trim();
+if (!webhookUrl) return;
+
+// Remplacer par l'URL de votre API Python pour clear memory
+const clearUrl = 'https://langchain-api-kh6o.onrender.com/clear_memory/' + conversationId;
+
+try {
+const response = await fetch(clearUrl, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' }
+});
+
+if (response.ok) {
+console.log('Mémoire serveur effacée avec succès');
+} else {
+console.log('Erreur lors de l\'effacement de la mémoire serveur');
+}
+} catch (error) {
+console.log('Impossible de contacter le serveur pour effacer la mémoire:', error);
 }
 }
 
@@ -387,13 +427,6 @@ input.value = '';
 input.style.height = 'auto';
 
 try {
-// Si en mode auto-reconnexion, on tente une reconnexion avant l'envoi
-if (autoReconnectMode) {
-await autoReconnect();
-// Petit délai pour laisser le webhook se reconnecter
-await new Promise(resolve => setTimeout(resolve, 500));
-}
-
 const payload = {
 body: {
 text: message,
@@ -408,11 +441,7 @@ const response = await fetch(webhookUrl, {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify(payload)
-// CORRECTION : Pas de mode no-cors ici car on a besoin de la réponse
 });
-
-console.log('Response status:', response.status);
-console.log('Response headers:', response.headers);
 
 if (response.ok) {
 let data;
@@ -420,17 +449,15 @@ const contentType = response.headers.get('content-type');
 
 if (contentType && contentType.includes('application/json')) {
 data = await response.json();
-console.log('Response data:', data);
 } else {
 const textResponse = await response.text();
-console.log('Response text:', textResponse);
 data = { response: textResponse || 'Réponse reçue du workflow' };
 }
 
 const responseText = data.response || data.message || 'Réponse du workflow n8n';
 
 let metadata = 'Workflow n8n';
-if (data.analytics && data.analytics.processing) { // CORRECTION : Vérification de l'existence
+if (data.analytics && data.analytics.processing) {
 const proc = data.analytics.processing;
 metadata = `Bloc: ${proc.bloc_matched || 'Aucun'} | Conf: ${proc.confidence || 'N/A'}`;
 }
@@ -449,20 +476,11 @@ throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 } catch (error) {
 console.error('Erreur complète:', error);
 addMessage(`❌ Erreur: ${error.message}`, 'system');
-
-if (autoReconnectMode) {
-addMessage('🔄 Tentative de reconnexion automatique...', 'system');
-setTimeout(() => autoReconnect(), 1000);
-}
 } finally {
 sendBtn.disabled = false;
 sendBtn.innerHTML = '▶️';
 input.focus();
 }
-}
-
-function clearChat() {
-document.getElementById('messages').innerHTML = '<div class="message system">🗑️ Chat effacé. Prêt pour de nouveaux tests ! 🚀</div>';
 }
 
 function sendQuickTest(message) {
@@ -477,14 +495,12 @@ sendMessage();
 }
 }
 
-// Démo de conversation automatique
 async function startConversationDemo() {
 const demoMessages = [
 'Bonjour !',
 'je veux être payé pour ma formation',
 'comment devenir ambassadeur ?',
-'merci pour les infos',
-'je veux parler à un humain'
+'merci pour les infos'
 ];
 
 addMessage('🎬 Démarrage de la démo conversation...', 'system');
@@ -496,29 +512,21 @@ await sendMessage();
 await new Promise(resolve => setTimeout(resolve, 1000));
 }
 
-addMessage('🎬 Démo terminée ! Conversation fluide testée avec succès.', 'system');
+addMessage('🎬 Démo terminée !', 'system');
 }
 
-// Gestion du checkbox auto-reconnect
-document.getElementById('autoReconnect').addEventListener('change', function() {
-autoReconnectMode = this.checked;
-const modeBtn = document.getElementById('modeBtn');
-modeBtn.textContent = autoReconnectMode ? '🔄 Mode: Auto' : '⏸️ Mode: Manuel';
-modeBtn.className = autoReconnectMode ? 'control-btn active' : 'control-btn';
-});
-
-// Focus automatique
+// Initialisation
+updateUserInfo();
 document.getElementById('messageInput').focus();
 
 // Message d'aide
 setTimeout(() => {
 addMessage(`
-🔧 <strong>Guide pour tests continus (CORRIGÉ) :</strong><br><br>
-1️⃣ L'URL webhook est déjà corrigée (webhook-test au lieu de webhook)<br>
-2️⃣ Gestion CORS améliorée<br>
-3️⃣ Gestion d'erreur robuste ajoutée<br>
-4️⃣ Teste autant de messages que tu veux !<br><br>
-✅ <strong>Prêt à tester !</strong>
+🔧 <strong>Nouvelle fonctionnalité Clear Chat :</strong><br><br>
+🗑️ <strong>Clear Chat + Nouvel Utilisateur</strong> : Efface tout et vous fait passer pour un nouveau client<br>
+🧠 <strong>Clear Mémoire Seulement</strong> : Garde le même ID mais efface l'historique<br><br>
+👤 <strong>Votre ID actuel :</strong> ${conversationId}<br><br>
+✅ Testez les deux options pour voir la différence !
 `, 'system');
 }, 1000);
 </script>
