@@ -66,24 +66,31 @@ display: flex;
 flex-direction: column;
 gap: 15px;
 }
+
+/* ✅ FIX CRITIQUE : Messages base */
 .message {
-max-width: 80%;
 padding: 12px 16px;
 border-radius: 18px;
-line-height: 1.6;
+line-height: 1.5;
 animation: fadeIn 0.3s ease-in;
 word-wrap: break-word;
 overflow-wrap: break-word;
-/* ✅ FIX : Hauteur automatique pour éviter la troncature */
+white-space: pre-wrap;
+/* ✅ CRITIQUE : Largeur et hauteur flexibles */
+width: fit-content;
+max-width: 80%;
 min-height: auto;
 height: auto;
 }
+
 .message.user {
 background: #007bff;
 color: white;
 align-self: flex-end;
 border-bottom-right-radius: 4px;
 }
+
+/* ✅ FIX CRITIQUE : Messages bot lisibles */
 .message.bot {
 background: white;
 color: #333;
@@ -91,29 +98,13 @@ align-self: flex-start;
 border: 1px solid #e0e0e0;
 border-bottom-left-radius: 4px;
 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-/* ✅ CORRECTION : Permettre le scroll pour les longs messages */
-max-height: 400px;
-overflow-y: auto;
-scrollbar-width: thin;
-scrollbar-color: #ccc transparent;
-/* ✅ FIX : Assurer que le texte est lisible */
+/* ✅ CRITIQUE : Pas de hauteur fixe qui coupe le texte */
+max-height: none;
+overflow: visible;
+/* ✅ CRITIQUE : Assurer la lisibilité */
 white-space: pre-wrap;
+word-break: break-word;
 overflow-wrap: break-word;
-hyphens: auto;
-}
-
-/* ✅ CORRECTION : Style des scrollbars pour WebKit */
-.message.bot::-webkit-scrollbar {
-width: 6px;
-}
-
-.message.bot::-webkit-scrollbar-track {
-background: transparent;
-}
-
-.message.bot::-webkit-scrollbar-thumb {
-background-color: #ccc;
-border-radius: 3px;
 }
 
 .message.system {
@@ -124,6 +115,7 @@ border: 1px solid #ffeaa7;
 font-size: 0.9em;
 text-align: center;
 }
+
 .input-container {
 padding: 20px;
 background: white;
@@ -325,24 +317,16 @@ addMessage(`🔧 ${message}`, 'system');
 }
 }
 
-// ✅ FONCTION addMessage CORRIGÉE - Texte lisible et complet !
+// ✅ FONCTION addMessage COMPLÈTEMENT REFAITE - SIMPLE ET EFFICACE !
 function addMessage(content, type, extra = {}) {
 const messages = document.getElementById('messages');
 const messageDiv = document.createElement('div');
 messageDiv.className = `message ${type}`;
 
-let messageContent = content;
+// ✅ SIMPLICITÉ : Garder le contenu tel quel, juste convertir \n en <br>
+let messageContent = content.replace(/\n/g, '<br>');
 
-// ✅ CORRECTION : Formatage simple sans casser le texte
-if (messageContent && messageContent.length > 100) {
-// Convertir les \n en <br> pour l'affichage HTML
-messageContent = messageContent
-.replace(/\n/g, '<br>')
-// Garder les emojis espacés naturellement
-.replace(/(✅|🔹|👉|🕐|📱|🔗|➕|💰|📝|⚠️|🤞|🗣️)/g, '$1 ');
-// NE PLUS ajouter de <br> automatiques qui cassent le texte
-}
-
+// Ajouter les métadonnées si présentes
 if (extra.timestamp) {
 messageContent += `<div style="font-size: 0.75em; opacity: 0.7; margin-top: 8px; border-top: 1px solid #eee; padding-top: 5px;">⏰ ${extra.timestamp}</div>`;
 }
@@ -350,13 +334,15 @@ if (extra.metadata) {
 messageContent += `<div style="font-size: 0.75em; opacity: 0.7; margin-top: 5px;">📊 ${extra.metadata}</div>`;
 }
 
-// ✅ FIX : Assurer un affichage correct
+// ✅ AFFICHAGE DIRECT sans modification
 messageDiv.innerHTML = messageContent;
-messageDiv.style.minHeight = 'auto';
-messageDiv.style.height = 'auto';
 
+// ✅ AJOUT au DOM
 messages.appendChild(messageDiv);
 messages.scrollTop = messages.scrollHeight;
+
+// ✅ DEBUG : Log pour vérifier
+console.log('Message ajouté:', { type, contentLength: content.length, element: messageDiv });
 }
 
 async function testConnection() {
@@ -499,7 +485,7 @@ const textResponse = await response.text();
 data = { response: textResponse || 'Réponse reçue du workflow' };
 }
 
-// ✅ CORRECTION : Récupérer la réponse complète sans troncature
+// ✅ RÉCUPÉRATION SIMPLE de la réponse
 const responseText = data.response || data.message || 'Réponse du workflow n8n';
 
 let metadata = 'Workflow n8n';
@@ -508,7 +494,10 @@ const proc = data.analytics.processing;
 metadata = `Bloc: ${proc.bloc_matched || 'Aucun'} | Conf: ${proc.confidence || 'N/A'}`;
 }
 
-// ✅ CORRECTION : Afficher le message complet
+// ✅ DEBUG : Vérifier la réponse reçue
+console.log('Réponse reçue:', { length: responseText.length, content: responseText.substring(0, 100) + '...' });
+
+// ✅ AFFICHAGE SIMPLE
 addMessage(responseText, 'bot', {
 timestamp: new Date().toLocaleTimeString(),
 metadata: metadata
@@ -569,12 +558,15 @@ document.getElementById('messageInput').focus();
 // Message d'aide
 setTimeout(() => {
 addMessage(`
-🔧 <strong>Nouvelle fonctionnalité Clear Chat :</strong><br><br>
-🗑️ <strong>Clear Chat + Nouvel Utilisateur</strong> : Efface tout et vous fait passer pour un nouveau client<br>
-🧠 <strong>Clear Mémoire Seulement</strong> : Garde le même ID mais efface l'historique<br><br>
-👤 <strong>Votre ID actuel :</strong> ${conversationId}<br><br>
-✅ Testez les deux options pour voir la différence !<br><br>
-🆕 <strong>CORRECTION :</strong> Les messages longs s'affichent maintenant en entier avec scroll !
+🔧 NOUVELLE VERSION CORRIGÉE !
+
+✅ Affichage des messages réparé
+✅ Plus de texte coupé ou illisible
+✅ Messages longs entièrement visibles
+
+Votre ID actuel : ${conversationId}
+
+Testez maintenant vos scénarios !
 `, 'system');
 }, 1000);
 </script>
