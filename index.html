@@ -70,10 +70,13 @@ gap: 15px;
 max-width: 80%;
 padding: 12px 16px;
 border-radius: 18px;
-line-height: 1.4;
+line-height: 1.6;
 animation: fadeIn 0.3s ease-in;
 word-wrap: break-word;
 overflow-wrap: break-word;
+/* ✅ FIX : Hauteur automatique pour éviter la troncature */
+min-height: auto;
+height: auto;
 }
 .message.user {
 background: #007bff;
@@ -89,10 +92,14 @@ border: 1px solid #e0e0e0;
 border-bottom-left-radius: 4px;
 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 /* ✅ CORRECTION : Permettre le scroll pour les longs messages */
-max-height: 500px;
+max-height: 400px;
 overflow-y: auto;
 scrollbar-width: thin;
 scrollbar-color: #ccc transparent;
+/* ✅ FIX : Assurer que le texte est lisible */
+white-space: pre-wrap;
+overflow-wrap: break-word;
+hyphens: auto;
 }
 
 /* ✅ CORRECTION : Style des scrollbars pour WebKit */
@@ -318,7 +325,7 @@ addMessage(`🔧 ${message}`, 'system');
 }
 }
 
-// ✅ FONCTION addMessage CORRIGÉE - Plus de troncature !
+// ✅ FONCTION addMessage CORRIGÉE - Texte lisible et complet !
 function addMessage(content, type, extra = {}) {
 const messages = document.getElementById('messages');
 const messageDiv = document.createElement('div');
@@ -326,26 +333,28 @@ messageDiv.className = `message ${type}`;
 
 let messageContent = content;
 
-// ✅ CORRECTION : Ne plus tronquer les messages
-// ✅ CORRECTION : Améliorer le formatage des longs messages
-if (messageContent && messageContent.length > 200) {
+// ✅ CORRECTION : Formatage simple sans casser le texte
+if (messageContent && messageContent.length > 100) {
 // Convertir les \n en <br> pour l'affichage HTML
 messageContent = messageContent
 .replace(/\n/g, '<br>')
-// Ajouter des espaces après certains emojis pour la lisibilité
-.replace(/(✅|🔹|👉|🕐|📱|🔗|➕|💰|📝|⚠️|🤞|🗣️)/g, '$1 ')
-// Ajouter des sauts de ligne après les points pour les longs textes
-.replace(/\. ([A-ZÀÉÈÊËÎÏÔÖÙÛÜŸÇ])/g, '.<br><br>$1');
+// Garder les emojis espacés naturellement
+.replace(/(✅|🔹|👉|🕐|📱|🔗|➕|💰|📝|⚠️|🤞|🗣️)/g, '$1 ');
+// NE PLUS ajouter de <br> automatiques qui cassent le texte
 }
 
 if (extra.timestamp) {
-messageContent += `<div style="font-size: 0.75em; opacity: 0.7; margin-top: 5px;">⏰ ${extra.timestamp}</div>`;
+messageContent += `<div style="font-size: 0.75em; opacity: 0.7; margin-top: 8px; border-top: 1px solid #eee; padding-top: 5px;">⏰ ${extra.timestamp}</div>`;
 }
 if (extra.metadata) {
 messageContent += `<div style="font-size: 0.75em; opacity: 0.7; margin-top: 5px;">📊 ${extra.metadata}</div>`;
 }
 
+// ✅ FIX : Assurer un affichage correct
 messageDiv.innerHTML = messageContent;
+messageDiv.style.minHeight = 'auto';
+messageDiv.style.height = 'auto';
+
 messages.appendChild(messageDiv);
 messages.scrollTop = messages.scrollHeight;
 }
